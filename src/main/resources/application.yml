@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: dev
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates
+    check-template-location: true
+    suffix: .html
+    encoding: UTF-8
+    mode: HTML5
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/docker_platform?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    #    &autoReconnect=true&failOverReadOnly=false
+    username: root
+    password: Qq6655355
+
+server:
+  port: 8080
