@@ -1,4 +1,4 @@
-package cn.marioquer.dockerplatform.Controller;
+package cn.marioquer.dockerplatform.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
