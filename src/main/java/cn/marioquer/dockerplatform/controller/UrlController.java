@@ -10,9 +10,48 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class UrlController {
 
 
-    @GetMapping("/hello")
-    public String hom2() {
-        System.out.println("hello");
-        return "hello";
+    @GetMapping("/auth")
+    public String authPage() {
+        return "auth";
+    }
+
+    @GetMapping("/dashboard")
+    public String dashboardPage() {
+        return "dashboard/dashboard";
+    }
+
+    @GetMapping("/node/nodelist")
+    public String nodeListPage() {
+        return "node/node-list";
+    }
+
+    @GetMapping("/node/detail/container")
+    public String containerPage() {
+        return "node/detail/container";
+    }
+
+    @GetMapping("/node/detail/image")
+    public String imagePage() {
+        return "node/detail/image";
+    }
+
+    @GetMapping("/swarm/overview")
+    public String swarmOverviewPage() {
+        return "swarm/overview";
+    }
+
+    @GetMapping("/swarm/service")
+    public String servicePage() {
+        return "swarm/service";
+    }
+
+    @GetMapping("/swarm/visualizer")
+    public String swarmVisualizerPage() {
+        return "swarm/visualizer";
+    }
+
+    @GetMapping("/swarm/stack")
+    public String swarmStackPage() {
+        return "swarm/stack";
     }
 }

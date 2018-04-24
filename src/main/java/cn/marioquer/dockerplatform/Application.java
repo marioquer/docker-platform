@@ -3,7 +3,7 @@ package cn.marioquer.dockerplatform;
  * Created by marioquer on 2018/4/5.
  */
 
-import cn.marioquer.dockerplatform.entity.User;
+import cn.marioquer.dockerplatform.entity.UserEntity;
 import cn.marioquer.dockerplatform.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.*;
@@ -21,10 +21,10 @@ public class Application {
     @Autowired
     private UserService userService;
 
-    @RequestMapping("/")
+    @RequestMapping("/user")
     @ResponseBody
     String home() {
-        User user = userService.queryUserById(1);
+        UserEntity user = userService.queryUserById(1);
         return user.getUsername();
     }
 
