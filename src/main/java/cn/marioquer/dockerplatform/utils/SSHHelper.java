@@ -30,6 +30,7 @@ public class SSHHelper {
     }
 
     public int connect() {
+        long start = System.currentTimeMillis();
         try {
             session = jSch.getSession(sshInfo.getUser(), sshInfo.getHost(), sshInfo.getPort());
             Properties config = new Properties();
@@ -41,6 +42,7 @@ public class SSHHelper {
             e.printStackTrace();
             return -1;
         }
+        System.out.println((System.currentTimeMillis() - start) + "ms");
         return 0;
     }
 
@@ -61,7 +63,7 @@ public class SSHHelper {
         String result = "";
         ChannelExec openChannel = null;
         try {
-            if (session == null || !session.isConnected()){
+            if (session == null || !session.isConnected()) {
                 this.connect();
             }
             openChannel = (ChannelExec) session.openChannel("exec");
@@ -123,15 +125,19 @@ public class SSHHelper {
 
     public static void main(String args[]) {
         SSHInfo sshInfo = new SSHInfo("139.196.87.209", "root", "Qq6655355", 22);
-        SSHInfo sshInfo1 = new SSHInfo("138.68.54.186","root","Qq6655355",22);
+        SSHInfo sshInfo1 = new SSHInfo("138.68.54.186", "root", "Qq6655355", 22); // do
         SSHHelper sshHelper = new SSHHelper(sshInfo);
         SSHHelper sshHelper1 = new SSHHelper(sshInfo1);
         sshHelper.connect();
         sshHelper1.connect();
-        String output1 = sshHelper.execFromFile("static/shellfile/basic.txt");
+        String output1 = sshHelper1.exec("docker info");
         System.out.println(output1);
-        String output2 = sshHelper1.exec("ls");
-        System.out.println(output2);
+        String[] outputlist = output1.split("\\n|\\r\\n|\\r");
+        for (String i : outputlist) {
+            System.out.println(i + "1");
+        }
+//        String output2 = sshHelper.exec("sudo apt-get update");
+//        System.out.println(output2);
         sshHelper.close();
         sshHelper1.close();
     }

@@ -7,6 +7,7 @@ import java.util.Objects;
 @Table(name = "server", schema = "docker_platform", catalog = "")
 public class ServerEntity {
     private int id;
+    private int ownerId;
     private String name;
     private String ip;
     private String platform;
@@ -15,6 +16,20 @@ public class ServerEntity {
     private String memory;
     private String swarmId;
     private String swarmRole;
+    private String uname;
+    private String password;
+
+    public ServerEntity(int ownerId, String name, String ip, String platform, String dockerVersion, String cpu, String memory, String uname, String password) {
+        this.ownerId = ownerId;
+        this.name = name;
+        this.ip = ip;
+        this.platform = platform;
+        this.dockerVersion = dockerVersion;
+        this.cpu = cpu;
+        this.memory = memory;
+        this.uname = uname;
+        this.password = password;
+    }
 
     @Id
     @Column(name = "id", nullable = false)
@@ -24,6 +39,16 @@ public class ServerEntity {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Basic
+    @Column(name = "owner_id", nullable = false)
+    public int getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
     }
 
     @Basic
@@ -112,6 +137,7 @@ public class ServerEntity {
         if (o == null || getClass() != o.getClass()) return false;
         ServerEntity that = (ServerEntity) o;
         return id == that.id &&
+                ownerId == that.ownerId &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(ip, that.ip) &&
                 Objects.equals(platform, that.platform) &&
@@ -125,6 +151,26 @@ public class ServerEntity {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, name, ip, platform, dockerVersion, cpu, memory, swarmId, swarmRole);
+        return Objects.hash(id, ownerId, name, ip, platform, dockerVersion, cpu, memory, swarmId, swarmRole);
+    }
+
+    @Basic
+    @Column(name = "uname", nullable = false, length = 255)
+    public String getUname() {
+        return uname;
+    }
+
+    public void setUname(String uname) {
+        this.uname = uname;
+    }
+
+    @Basic
+    @Column(name = "password", nullable = false, length = 255)
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

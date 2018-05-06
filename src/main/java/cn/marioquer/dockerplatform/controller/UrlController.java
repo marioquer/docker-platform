@@ -2,13 +2,14 @@ package cn.marioquer.dockerplatform.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Created by marioquer on 2018/4/7.
  */
+@RequestMapping("/page")
 @Controller
 public class UrlController {
-
 
     @GetMapping("/auth")
     public String authPage() {
@@ -20,19 +21,19 @@ public class UrlController {
         return "dashboard/dashboard";
     }
 
-    @GetMapping("/node/nodelist")
-    public String nodeListPage() {
-        return "node/node-list";
+    @GetMapping("/serverList")
+    public String serverListPage() {
+        return "server/server-list";
     }
 
-    @GetMapping("/node/detail/container")
+    @GetMapping("/server/container")
     public String containerPage() {
-        return "node/detail/container";
+        return "server/detail/container";
     }
 
-    @GetMapping("/node/detail/image")
+    @GetMapping("/server/image")
     public String imagePage() {
-        return "node/detail/image";
+        return "server/detail/image";
     }
 
     @GetMapping("/swarm/overview")

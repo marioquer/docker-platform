@@ -15,6 +15,7 @@ public class ServiceEntity {
     private String port;
     private Timestamp updated;
     private Timestamp created;
+    private String swarmId;
 
     @Id
     @Column(name = "service_id", nullable = false, length = 255)
@@ -96,6 +97,16 @@ public class ServiceEntity {
         this.created = created;
     }
 
+    @Basic
+    @Column(name = "swarm_id", nullable = false, length = 255)
+    public String getSwarmId() {
+        return swarmId;
+    }
+
+    public void setSwarmId(String swarmId) {
+        this.swarmId = swarmId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -108,12 +119,13 @@ public class ServiceEntity {
                 Objects.equals(mode, that.mode) &&
                 Objects.equals(port, that.port) &&
                 Objects.equals(updated, that.updated) &&
-                Objects.equals(created, that.created);
+                Objects.equals(created, that.created) &&
+                Objects.equals(swarmId, that.swarmId);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(serviceId, name, stackName, image, mode, port, updated, created);
+        return Objects.hash(serviceId, name, stackName, image, mode, port, updated, created, swarmId);
     }
 }

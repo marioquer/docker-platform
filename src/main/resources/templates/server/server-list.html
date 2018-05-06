@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="/css/nprogress.css"/>
+    <title>Deck.io - 节点管理</title>
+</head>
+<body>
+<header>
+    <div class="brand">Deck.<span style="color: #04AFE3">io</span></div>
+    <a class="index-left" href="/page/dashboard">控制台</a>
+    <a class="index-left active" href="/page/serverList">节点管理</a>
+    <a class="index-left" href="/page/swarm/overview">集群管理</a>
+    <a class="index-right" onclick="exit()">登出</a>
+    <a class="index-right">marioquer</a>
+    <a class="index-right display-none" id="owner_id">1</a>
+</header>
+
+<div class="form-container" id="server_container">
+    <div class="form-header">
+        节点列表
+    </div>
+    <div class="header-action" onclick="switchModal(1,'new_server_modal')">增加节点 +</div>
+    <table class="list-table">
+        <thead class="list-row">
+        <th class="column-1">节点名</th>
+        <th class="column-2">角色</th>
+        <th class="column-3">CPU</th>
+        <th class="column-4">内存</th>
+        <th class="column-5">docker版本</th>
+        <th class="column-6">IP</th>
+        <th class="column-7">状态</th>
+        <th class="column-op">操作</th>
+        </thead>
+        <tbody id="table_body">
+        <tr id="list_row" class="display-none">
+            <td class="column-0 display-none">0</td>
+            <td class="column-1">-</td>
+            <td class="column-2">-</td>
+            <td class="column-3">-</td>
+            <td class="column-4">-</td>
+            <td class="column-5">-</td>
+            <td class="column-6">-</td>
+            <td class="column-7"><span class="green-spot"></span>运行中</td>
+            <td class="column-op">操作</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div class="modal" id="new_server_modal">
+    <div class="form-container modal-style">
+        <span class="close-button" onclick="switchModal(0,'new_server_modal')">X</span>
+        <div class="form-header">
+            添加节点
+        </div>
+        <input type="text" class="form-style" id="new_name" placeholder="主机别名：server-01"/>
+        <input type="text" class="form-style" id="new_ip" placeholder="IP地址：0.0.0.0"/>
+        <input type="text" class="form-style" id="new_uname" placeholder="账号：root"/>
+        <input type="password" class="form-style" id="new_password" placeholder="密码"/>
+        <div class="modal-operations">
+            <button class="verify-button modal-button" onclick="addServer()">SUBMIT</button>
+            <button class="action-button modal-button" onclick="switchModal(0,'new_server_modal')">CANCEL</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/nprogress.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script>
+    $.ajax({
+        url: '/getServerList',
+        type: 'POST',
+        data: {
+            ownerId: 1
+        },
+        success: function (resp) {
+            for (var i = 0; i < resp.length; i++) {
+                var $newRow = $("<tr></tr>");
+                $newRow.html($("#list_row").html());
+                $newRow.find('td.column-0').html(resp[i].id);
+                $newRow.find('td.column-1').html(resp[i].name);
+                $newRow.find('td.column-2').html(resp[i].swarmRole == null ? '-' : resp[i].swarmRole);
+                $newRow.find('td.column-3').html(resp[i].cpu);
+                $newRow.find('td.column-4').html(resp[i].memory);
+                $newRow.find('td.column-5').html(resp[i].dockerVersion);
+                $newRow.find('td.column-6').html(resp[i].ip);
+                // $newRow.find('td.column-7').html();
+                $("#table_body").append($newRow);
+            }
+            NProgress.done();
+        },
+        error: function (err) {
+            console.log(err);
+        }
+    });
+
+    function addServer() {
+        NProgress.start();
+        var ip = $("#new_ip").val();
+        var uname = $("#new_uname").val();
+        var password = $("#new_password").val();
+        var name = $("#new_name").val();
+        var ownerId = $("#owner_id").val();
+        $.ajax({
+            url: '/addServer',
+            type: 'POST',
+            data: {
+                name: name,
+                ownerId: ownerId,
+                ip: ip,
+                uname: uname,
+                password: password
+            },
+            success: function (resp) {
+                if (resp == "success") {
+                    NProgress.done();
+                    location.reload();
+                } else {
+                    alert("增加失败");
+                }
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

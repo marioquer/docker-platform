@@ -8,6 +8,7 @@ import java.util.Objects;
 @Table(name = "images", schema = "docker_platform", catalog = "")
 public class ImagesEntity {
     private String id;
+    private int serverId;
     private String name;
     private String repository;
     private String tag;
@@ -22,6 +23,16 @@ public class ImagesEntity {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Basic
+    @Column(name = "server_id", nullable = false)
+    public int getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(int serverId) {
+        this.serverId = serverId;
     }
 
     @Basic
@@ -79,7 +90,8 @@ public class ImagesEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ImagesEntity that = (ImagesEntity) o;
-        return Objects.equals(id, that.id) &&
+        return serverId == that.serverId &&
+                Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(repository, that.repository) &&
                 Objects.equals(tag, that.tag) &&
@@ -90,6 +102,6 @@ public class ImagesEntity {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, name, repository, tag, size, created);
+        return Objects.hash(id, serverId, name, repository, tag, size, created);
     }
 }

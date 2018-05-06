@@ -8,6 +8,7 @@ import java.util.Objects;
 @Table(name = "swarm", schema = "docker_platform", catalog = "")
 public class SwarmEntity {
     private String swarmId;
+    private int ownerId;
     private String apiVersion;
     private String name;
     private Timestamp created;
@@ -20,6 +21,16 @@ public class SwarmEntity {
 
     public void setSwarmId(String swarmId) {
         this.swarmId = swarmId;
+    }
+
+    @Basic
+    @Column(name = "owner_id", nullable = false)
+    public int getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
     }
 
     @Basic
@@ -57,7 +68,8 @@ public class SwarmEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SwarmEntity that = (SwarmEntity) o;
-        return Objects.equals(swarmId, that.swarmId) &&
+        return ownerId == that.ownerId &&
+                Objects.equals(swarmId, that.swarmId) &&
                 Objects.equals(apiVersion, that.apiVersion) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(created, that.created);
@@ -66,6 +78,6 @@ public class SwarmEntity {
     @Override
     public int hashCode() {
 
-        return Objects.hash(swarmId, apiVersion, name, created);
+        return Objects.hash(swarmId, ownerId, apiVersion, name, created);
     }
 }
