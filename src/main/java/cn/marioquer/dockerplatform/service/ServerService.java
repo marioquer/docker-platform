@@ -1,6 +1,6 @@
 package cn.marioquer.dockerplatform.service;
 
-import cn.marioquer.dockerplatform.VO.ServerVO;
+import cn.marioquer.dockerplatform.vo.ServerVO;
 
 import java.util.List;
 

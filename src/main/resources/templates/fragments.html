@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Fragments</title>
+</head>
+<body>
+
+<div class="modal" id="msg_modal" th:fragment="msg_modal">
+    <div class="form-container modal-style">
+        <span class="close-button" onclick="switchModal(0,'msg_modal')">X</span>
+        <!--<div class="form-header">-->
+        <!--添加节点-->
+        <!--</div>-->
+        <div id="msg_modal_text"></div>
+        <div class="modal-operations">
+            <button class="action-button modal-button" onclick="switchModal(0,'msg_modal')">OK</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast" th:fragment="toast">
+    <span class="close-button" onclick="switchToast(0)">X</span>
+    <div id="toast_text">text</div>
+</div>
+
+</body>
+</html>

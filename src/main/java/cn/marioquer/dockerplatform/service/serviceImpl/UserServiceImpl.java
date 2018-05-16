@@ -1,10 +1,16 @@
 package cn.marioquer.dockerplatform.service.serviceImpl;
 
+import cn.marioquer.dockerplatform.utils.enums.ERROR_MSG;
+import cn.marioquer.dockerplatform.vo.UserLoginVO;
 import cn.marioquer.dockerplatform.dao.UserDao;
 import cn.marioquer.dockerplatform.entity.UserEntity;
 import cn.marioquer.dockerplatform.service.UserService;
+import cn.marioquer.dockerplatform.utils.PasswordEncryption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -13,7 +19,53 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public UserEntity queryUserById(int id) {
-        return userDao.getOne(id);
+    public UserLoginVO login(String username, String password) {
+        UserEntity user = userDao.findByUsername(username);
+        UserLoginVO userLoginVO = new UserLoginVO();
+        if (user == null) {
+            userLoginVO.setLogin_status(ERROR_MSG.LOGIN_NOT_FOUND);
+        } else {
+            String salt = user.getSalt();
+            String encryptedPassword = user.getPassword();
+            boolean result = false;
+            try {
+                result = PasswordEncryption.authenticate(password, encryptedPassword, salt);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (InvalidKeySpecException e) {
+                e.printStackTrace();
+            }
+            if (result) {
+                userLoginVO.setId(user.getId());
+                userLoginVO.setUsername(user.getUsername());
+                userLoginVO.setLogin_status(ERROR_MSG.SUCCESS);
+            } else {
+                userLoginVO.setLogin_status(ERROR_MSG.LOGIN_ERROR);
+            }
+        }
+        return userLoginVO;
+    }
+
+    @Override
+    public String signUp(String username, String password) {
+        if (userDao.existsByUsername(username)) {
+            return ERROR_MSG.SIGNUP_EXISTS;
+        } else {
+            UserEntity user = new UserEntity();
+            user.setUsername(username);
+            try {
+                String salt = PasswordEncryption.generateSalt();
+                String encryptedPassword = PasswordEncryption.getEncryptedPassword(password, salt);
+                user.setSalt(salt);
+                user.setPassword(encryptedPassword);
+                userDao.saveAndFlush(user);
+                return ERROR_MSG.SUCCESS;
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (InvalidKeySpecException e) {
+                e.printStackTrace();
+            }
+        }
+        return ERROR_MSG.FAIL;
     }
 }

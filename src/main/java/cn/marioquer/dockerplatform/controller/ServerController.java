@@ -1,6 +1,6 @@
 package cn.marioquer.dockerplatform.controller;
 
-import cn.marioquer.dockerplatform.VO.ServerVO;
+import cn.marioquer.dockerplatform.vo.ServerVO;
 import cn.marioquer.dockerplatform.service.ServerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

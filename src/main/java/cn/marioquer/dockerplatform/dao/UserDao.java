@@ -9,5 +9,6 @@ import java.util.Optional;
 
 
 public interface UserDao extends JpaRepository<UserEntity, Integer> {
-    public List<UserEntity> findByUsername(String username);
+    public UserEntity findByUsername(String username);
+    public boolean existsByUsername(String username);
 }

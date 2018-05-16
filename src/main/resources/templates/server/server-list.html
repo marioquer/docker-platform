@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" href="/css/common.css"/>
@@ -8,17 +8,17 @@
 </head>
 <body>
 <header>
-    <div class="brand">Deck.<span style="color: #04AFE3">io</span></div>
+    <div class="brand">Deck.<span class="brand-hightlight">io</span></div>
     <a class="index-left" href="/page/dashboard">控制台</a>
     <a class="index-left active" href="/page/serverList">节点管理</a>
     <a class="index-left" href="/page/swarm/overview">集群管理</a>
-    <a class="index-right" onclick="exit()">登出</a>
-    <a class="index-right">marioquer</a>
-    <a class="index-right display-none" id="owner_id">1</a>
+    <a class="index-right" onclick="logout()">登出</a>
+    <a class="index-right" th:text="${session.User.getUsername()}">marioquer</a>
+    <a class="index-right display-none" id="owner_id" th:text="${session.User.getId()}">1</a>
 </header>
 
-<div class="form-container" id="server_container">
-    <div class="form-header">
+<div class=" form-container" id="server_container">
+    <div class="list-header">
         节点列表
     </div>
     <div class="header-action" onclick="switchModal(1,'new_server_modal')">增加节点 +</div>
@@ -34,14 +34,14 @@
         <th class="column-op">操作</th>
         </thead>
         <tbody id="table_body">
-        <tr id="list_row" class="display-none">
-            <td class="column-0 display-none">0</td>
-            <td class="column-1">-</td>
-            <td class="column-2">-</td>
-            <td class="column-3">-</td>
-            <td class="column-4">-</td>
-            <td class="column-5">-</td>
-            <td class="column-6">-</td>
+        <tr th:each="server:${serverList}">
+            <td class="column-0 display-none" th:text="${server.getId()}">0</td>
+            <td class="column-1" th:text="${server.getName()}">-</td>
+            <td class="column-2" th:text="${server.getSwarmRole()==null?'-':server.getSwarmRole()}">-</td>
+            <td class="column-3" th:text="${server.getCpu()}">-</td>
+            <td class="column-4" th:text="${server.getMemory()}">-</td>
+            <td class="column-5" th:text="${server.getDockerVersion()}">-</td>
+            <td class="column-6" th:text="${server.getIp()}">-</td>
             <td class="column-7"><span class="green-spot"></span>运行中</td>
             <td class="column-op">操作</td>
         </tr>
@@ -67,68 +67,43 @@
     </div>
 </div>
 
+<div th:replace="fragments::msg_modal"></div>
+<!--<div th:replace="fragments::toast"></div>-->
+
 <script type="text/javascript" src="/js/jquery.min.js"></script>
 <script type="text/javascript" src="/js/nprogress.js"></script>
 <script type="text/javascript" src="/js/common.js"></script>
 <script>
-    $.ajax({
-        url: '/getServerList',
-        type: 'POST',
-        data: {
-            ownerId: 1
-        },
-        success: function (resp) {
-            for (var i = 0; i < resp.length; i++) {
-                var $newRow = $("<tr></tr>");
-                $newRow.html($("#list_row").html());
-                $newRow.find('td.column-0').html(resp[i].id);
-                $newRow.find('td.column-1').html(resp[i].name);
-                $newRow.find('td.column-2').html(resp[i].swarmRole == null ? '-' : resp[i].swarmRole);
-                $newRow.find('td.column-3').html(resp[i].cpu);
-                $newRow.find('td.column-4').html(resp[i].memory);
-                $newRow.find('td.column-5').html(resp[i].dockerVersion);
-                $newRow.find('td.column-6').html(resp[i].ip);
-                // $newRow.find('td.column-7').html();
-                $("#table_body").append($newRow);
-            }
-            NProgress.done();
-        },
-        error: function (err) {
-            console.log(err);
-        }
-    });
-
-    function addServer() {
-        NProgress.start();
-        var ip = $("#new_ip").val();
-        var uname = $("#new_uname").val();
-        var password = $("#new_password").val();
-        var name = $("#new_name").val();
-        var ownerId = $("#owner_id").val();
-        $.ajax({
-            url: '/addServer',
-            type: 'POST',
-            data: {
-                name: name,
-                ownerId: ownerId,
-                ip: ip,
-                uname: uname,
-                password: password
-            },
-            success: function (resp) {
-                if (resp == "success") {
-                    NProgress.done();
-                    location.reload();
-                } else {
-                    alert("增加失败");
-                }
-            },
-            error: function (err) {
-                console.log(err);
-            }
-        });
-    }
-
+    // $.ajax({
+    //     url: '/getServerList',
+    //     type: 'POST',
+    //     data: {
+    //         ownerId: 1
+    //     },
+    //     success: function (resp) {
+    //         for (var i = 0; i < resp.length; i++) {
+    //             var $newRow = $("<tr></tr>");
+    //             $newRow.html($("#list_row").html());
+    //             $newRow.find('td.column-0').html(resp[i].id);
+    //             $newRow.find('td.column-1').html(resp[i].name);
+    //             $newRow.find('td.column-2').html(resp[i].swarmRole == null ? '-' : resp[i].swarmRole);
+    //             $newRow.find('td.column-3').html(resp[i].cpu);
+    //             $newRow.find('td.column-4').html(resp[i].memory);
+    //             $newRow.find('td.column-5').html(resp[i].dockerVersion);
+    //             $newRow.find('td.column-6').html(resp[i].ip);
+    //             // $newRow.find('td.column-7').html();
+    //             $("#table_body").append($newRow);
+    //         }
+    //         NProgress.done();
+    //     },
+    //     error: function (err) {
+    //         console.log(err);
+    //     }
+    // });
+    NProgress.done();
+    // showToast("登录成功", 2000, -1, function () {
+    //     // location.reload();
+    // });
 </script>
 </body>
 </html>

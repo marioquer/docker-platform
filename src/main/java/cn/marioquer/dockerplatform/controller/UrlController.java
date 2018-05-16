@@ -1,8 +1,14 @@
 package cn.marioquer.dockerplatform.controller;
 
+import cn.marioquer.dockerplatform.service.ServerService;
+import cn.marioquer.dockerplatform.vo.UserLoginVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * Created by marioquer on 2018/4/7.
@@ -10,10 +16,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/page")
 @Controller
 public class UrlController {
+    @Autowired
+    ServerService serverService;
 
-    @GetMapping("/auth")
-    public String authPage() {
-        return "auth";
+
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login";
+    }
+
+    @GetMapping("/signup")
+    public String signupPage() {
+        return "signup";
     }
 
     @GetMapping("/dashboard")
@@ -22,8 +36,11 @@ public class UrlController {
     }
 
     @GetMapping("/serverList")
-    public String serverListPage() {
-        return "server/server-list";
+    public ModelAndView serverListPage(HttpSession session) {
+        ModelAndView serverlistView = new ModelAndView("server/server-list");
+        UserLoginVO userLoginVO = (UserLoginVO) session.getAttribute("User");
+        serverlistView.addObject("serverList", serverService.getServerList(userLoginVO.getId()));
+        return serverlistView;
     }
 
     @GetMapping("/server/container")

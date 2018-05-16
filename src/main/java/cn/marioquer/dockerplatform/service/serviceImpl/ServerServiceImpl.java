@@ -1,6 +1,6 @@
 package cn.marioquer.dockerplatform.service.serviceImpl;
 
-import cn.marioquer.dockerplatform.VO.ServerVO;
+import cn.marioquer.dockerplatform.vo.ServerVO;
 import cn.marioquer.dockerplatform.dao.ServerDao;
 import cn.marioquer.dockerplatform.entity.ServerEntity;
 import cn.marioquer.dockerplatform.service.ServerService;

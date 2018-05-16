@@ -11,6 +11,7 @@ public class UserEntity {
     private int id;
     private String username;
     private String password;
+    private String salt;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -56,5 +57,15 @@ public class UserEntity {
     public int hashCode() {
 
         return Objects.hash(id, username, password);
+    }
+
+    @Basic
+    @Column(name = "salt", nullable = false, length = 255)
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 }

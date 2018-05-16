@@ -1,4 +1,4 @@
-package cn.marioquer.dockerplatform.VO;
+package cn.marioquer.dockerplatform.vo;
 
 public class ServerVO {
     private int id;

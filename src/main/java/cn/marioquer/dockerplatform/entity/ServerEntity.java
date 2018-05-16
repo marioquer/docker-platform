@@ -19,6 +19,10 @@ public class ServerEntity {
     private String uname;
     private String password;
 
+    public ServerEntity() {
+
+    }
+
     public ServerEntity(int ownerId, String name, String ip, String platform, String dockerVersion, String cpu, String memory, String uname, String password) {
         this.ownerId = ownerId;
         this.name = name;

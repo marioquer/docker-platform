@@ -1,8 +1,9 @@
 package cn.marioquer.dockerplatform.service;
 
-import cn.marioquer.dockerplatform.entity.UserEntity;
-import org.springframework.stereotype.Service;
+import cn.marioquer.dockerplatform.vo.UserLoginVO;
 
 public interface UserService {
-    public UserEntity queryUserById(int id);
+    public UserLoginVO login(String username, String password);
+
+    public String signUp(String username, String password);
 }

@@ -51,7 +51,7 @@
     font-family: 'Titillium', 'PingFang SC', 'Microsoft-YaHei';
 }
 
-.display-none{
+.display-none {
     display: none;
 }
 
@@ -65,6 +65,14 @@
 }
 
 .form-header {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 500;
+    color: #384549;
+    display: inline-block;
+}
+
+.list-header {
     text-align: left;
     font-size: 24px;
     font-weight: 500;
@@ -236,6 +244,10 @@ header .brand {
     color: #384549;
 }
 
+header .brand-hightlight {
+    color: #04AFE3;
+}
+
 header .index-left {
     display: inline-block;
     color: #384549;
@@ -250,7 +262,7 @@ header .index-left {
 }
 
 header .index-right {
-    display: inline-block;
+    /*display: inline-block;*/
     color: #384549;
     float: right;
     margin-top: 8px;
@@ -314,7 +326,7 @@ a.active {
     box-shadow: rgba(0, 0, 0, 0.1) 0 0 10px;
 }
 
-.modal .close-button {
+.modal .close-button, #toast .close-button {
     cursor: pointer;
     padding-top: 1px;
     color: #384549;
@@ -334,15 +346,42 @@ a.active {
     transition: color, border-color 0.2s ease-in-out;
 }
 
-.modal .close-button:hover {
+.modal .close-button:hover, #toast .close-button:hover {
     border-color: #04AFE3;
     color: #04AFE3;
 }
 
+#msg_modal_text {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 500;
+    color: #384549;
+    display: inline-block;
+}
+
 /*.modal-button{*/
-    /*display: inline-block;*/
-    /*width: 47%;*/
+/*display: inline-block;*/
+/*width: 47%;*/
 /*}*/
+
+#toast {
+    display: none;
+    z-index: 999;
+    font-weight: 500;
+    text-align: center;
+    color: #384549;
+    min-width: 200px;
+    position: absolute;
+    right: 40px;
+    top: 40px;
+    height: 60px;
+    padding: 15px;
+    background-color: white;
+    box-sizing: border-box;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 0 10px;
+    border: 2px solid #E8E8E8;
+    border-radius: 4px;
+}
 
 .overflow-hidden {
     overflow: hidden;
@@ -435,10 +474,6 @@ td {
     height: 10px;
     border-radius: 5px;
 }
-
-
-
-
 
 /* Checkmark style starts */
 
@@ -572,7 +607,7 @@ input[type=radio] {
     transform: rotate(-45deg);
 }
 
-input[type=checkbox]:checked + label, input[type=checkbox]:checked + label + label,  input[type=radio]:checked + label, input[type=radio]:checked + label + label{
+input[type=checkbox]:checked + label, input[type=checkbox]:checked + label + label, input[type=radio]:checked + label, input[type=radio]:checked + label + label {
     border-color: #1D69FF;
     color: #1D69FF;
 }
@@ -595,7 +630,7 @@ input[type=radio]:checked + .check-box::before, .check-box.checked::before {
     animation: dothatopcheck 0.4s ease 0s forwards;
 }
 
-.choice .single{
+.choice .single {
     border-radius: 14px !important;
 }
 
@@ -619,7 +654,7 @@ input[type=radio]:checked + .check-box::before, .check-box.checked::before {
     color: #384549;
 }
 
-label{
+label {
     vertical-align: top;
 }
 
@@ -629,7 +664,7 @@ label{
     margin-right: 40px;
 }
 
-#server_container{
+#server_container {
     width: 900px !important;
 }
 
