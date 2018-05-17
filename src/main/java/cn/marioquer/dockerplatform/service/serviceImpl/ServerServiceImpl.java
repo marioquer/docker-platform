@@ -1,5 +1,7 @@
 package cn.marioquer.dockerplatform.service.serviceImpl;
 
+import cn.marioquer.dockerplatform.utils.enums.ErrorMessage;
+import cn.marioquer.dockerplatform.utils.enums.ShellScript;
 import cn.marioquer.dockerplatform.vo.ServerVO;
 import cn.marioquer.dockerplatform.dao.ServerDao;
 import cn.marioquer.dockerplatform.entity.ServerEntity;
@@ -14,6 +16,8 @@ import java.util.List;
 
 @Service
 public class ServerServiceImpl implements ServerService {
+
+    private static String RETURN_REG_PATTERN = "\\n|\\r\\n|\\r";
 
     @Autowired
     ServerDao serverDao;
@@ -30,7 +34,7 @@ public class ServerServiceImpl implements ServerService {
             serverVO.setIp(entity.getIp());
             serverVO.setPlatform(entity.getPlatform());
             serverVO.setDockerVersion(entity.getDockerVersion());
-            serverVO.setCpu(entity.getDockerVersion());
+            serverVO.setCpu(entity.getCpu());
             serverVO.setMemory(entity.getMemory());
             serverVO.setSwarmId(entity.getSwarmId());
             serverVO.setSwarmRole(entity.getSwarmRole());
@@ -40,30 +44,54 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public boolean installServer(int ownerId, String name, String ip, String uname, String password) {
-        boolean result = false;
-        SSHHelper sshHelper = new SSHHelper(new SSHInfo(ip, uname, password, 22));
-        sshHelper.connect();
-//        sshHelper.execFromFile("/shellfile/initialize_server.sh");
-        String[] dockerInfo = sshHelper.exec("docker info").split("\\n|\\r\\n|\\r");
-        if (dockerInfo[0].startsWith("Container")) {
-            result = true;
-            String platform = "", docker_version = "", cpu = "", memory = "";
-            for (String s : dockerInfo) {
-                if (s.startsWith("Operating System")) {
-                    platform = s.split(": ")[1];
-                } else if (s.startsWith("Server Version")) {
-                    docker_version = s.split(": ")[1];
-                } else if (s.startsWith("CPUs")) {
-                    cpu = s.split(": ")[1];
-                } else if (s.startsWith("Total Memory")) {
-                    memory = s.split(": ")[1];
-                }
+    public String installServer(int ownerId, String name, String ip, String uname, String password) {
+        String result = ErrorMessage.FAIL;
+        //已有服务器
+        if (serverDao.findByIp(ip) != null) {
+            return ErrorMessage.EXISTS;
+        }
+        SSHHelper sshHelper = new SSHHelper(new SSHInfo(ip, uname, password));
+        //密钥错误
+        if (sshHelper.connect() == -1) {
+            return ErrorMessage.WRG_PSW;
+        }
+        String[] dockerInfo = sshHelper.exec(ShellScript.DOCKER_INFO).split(RETURN_REG_PATTERN);
+        if (existsDocker(dockerInfo)) {
+            saveServerEntity(dockerInfo, ownerId, name, ip, uname, password);
+            result = ErrorMessage.SUCCESS;
+        } else {
+            sshHelper.execFromFile("shellfile/initialize_server.sh");
+            if (existsDocker(sshHelper.exec(ShellScript.DOCKER_INFO).split(RETURN_REG_PATTERN))) {
+                saveServerEntity(dockerInfo, ownerId, name, ip, uname, password);
+                result = ErrorMessage.SUCCESS;
             }
-            ServerEntity serverEntity = new ServerEntity(ownerId, name, ip, platform, docker_version, cpu, memory, uname, password);
-            serverDao.save(serverEntity);
         }
         sshHelper.close();
         return result;
+    }
+
+    public boolean existsDocker(String[] dockerInfo) {
+        if (dockerInfo[0].startsWith("Container")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void saveServerEntity(String[] dockerInfo, int ownerId, String name, String ip, String uname, String password) {
+        String platform = "", docker_version = "", cpu = "", memory = "";
+        for (String s : dockerInfo) {
+            if (s.startsWith("Operating System")) {
+                platform = s.split(": ")[1];
+            } else if (s.startsWith("Server Version")) {
+                docker_version = s.split(": ")[1];
+            } else if (s.startsWith("CPUs")) {
+                cpu = s.split(": ")[1];
+            } else if (s.startsWith("Total Memory")) {
+                memory = s.split(": ")[1];
+            }
+        }
+        ServerEntity serverEntity = new ServerEntity(ownerId, name, ip, platform, docker_version, cpu, memory, uname, password);
+        serverDao.saveAndFlush(serverEntity);
     }
 }

@@ -19,7 +19,6 @@ public class UrlController {
     @Autowired
     ServerService serverService;
 
-
     @GetMapping("/login")
     public String loginPage() {
         return "login";
@@ -30,12 +29,13 @@ public class UrlController {
         return "signup";
     }
 
-    @GetMapping("/dashboard")
-    public String dashboardPage() {
-        return "dashboard/dashboard";
+    @GetMapping("/index/dashboard")
+    public ModelAndView dashboardPage() {
+        ModelAndView dashboardView = new ModelAndView("dashboard/dashboard");
+        return dashboardView;
     }
 
-    @GetMapping("/serverList")
+    @GetMapping("/server/serverList")
     public ModelAndView serverListPage(HttpSession session) {
         ModelAndView serverlistView = new ModelAndView("server/server-list");
         UserLoginVO userLoginVO = (UserLoginVO) session.getAttribute("User");

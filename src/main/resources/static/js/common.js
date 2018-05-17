@@ -81,7 +81,7 @@ function login() {
                 } else {
                     sessionStorage.setItem("userId", resp.id);
                     showToast("欢迎回来，" + resp.username, TOAST_TIME, 1, function () {
-                        location.href = '/page/serverList';
+                        location.href = '/page/server/serverList';
                     });
                 }
             },
@@ -136,11 +136,12 @@ function logout() {
         type: 'GET',
         success: function (resp) {
             showToast("登出成功", TOAST_TIME, 1, function () {
+                sessionStorage.removeItem("userId");
                 location.href = resp;
             });
         },
         error: function (err) {
-            showToast('注册失败', TOAST_TIME, -1);
+            showToast('登出失败', TOAST_TIME, -1);
             console.log(err);
         }
     });
@@ -154,28 +155,43 @@ function addServer() {
     var uname = $("#new_uname").val();
     var password = $("#new_password").val();
     var name = $("#new_name").val();
-    var ownerId = $("#owner_id").val();
-    $.ajax({
-        url: '/addServer',
-        type: 'POST',
-        data: {
-            name: name,
-            ownerId: ownerId,
-            ip: ip,
-            uname: uname,
-            password: password
-        },
-        success: function (resp) {
-            if (resp == "success") {
-                NProgress.done();
-                location.reload();
-            } else {
+    var ownerId = sessionStorage.getItem("userId");
+
+    if (ip == "" || uname == "" || password == "" || name == "") {
+        showToast('请填写完整信息', TOAST_TIME, -1);
+    } else {
+        $.ajax({
+            url: '/addServer',
+            type: 'POST',
+            data: {
+                name: name,
+                ownerId: ownerId,
+                ip: ip,
+                uname: uname,
+                password: password
+            },
+            success: function (resp) {
+                if (resp == "success") {
+                    showToast("增加成功", TOAST_TIME, 1, function () {
+                        location.reload();
+                    });
+                } else if (resp == "exists") {
+                    showToast("服务器已存在", TOAST_TIME, -1);
+                } else if (resp == "wrong_password") {
+                    showToast("账号或密码错误", TOAST_TIME, -1);
+                } else {
+                    showToast("增加失败", TOAST_TIME, -1);
+                }
+            },
+            error: function (err) {
                 showToast("增加失败", TOAST_TIME, -1);
+                console.log(err);
+            },
+            complete: function () {
+                NProgress.done();
             }
-        },
-        error: function (err) {
-            console.log(err);
-        }
-    });
+        });
+
+    }
 }
 

@@ -1,10 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="/css/nprogress.css"/>
+    <title>Deck.io - 控制台</title>
 </head>
 <body>
+<header>
+    <div class="brand">Deck.<span class="brand-hightlight">io</span></div>
+    <a class="index-left active" href="/page/index/dashboard">控制台</a>
+    <a class="index-left" href="/page/server/serverList">节点管理</a>
+    <a class="index-left" href="/page/swarm/overview">集群管理</a>
+    <a class="index-right" onclick="logout()">登出</a>
+    <a class="index-right" th:text="${session.User.getUsername()}">marioquer</a>
+    <a class="index-right display-none" id="owner_id" th:text="${session.User.getId()}">1</a>
+</header>
 
+<div class=" form-container" id="server_container">
+
+</div>
+
+<div th:replace="fragments::msg_modal"></div>
+<!--<div th:replace="fragments::toast"></div>-->
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/nprogress.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script>
+    NProgress.done();
+</script>
 </body>
 </html>

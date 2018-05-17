@@ -1,6 +1,6 @@
 package cn.marioquer.dockerplatform.service.serviceImpl;
 
-import cn.marioquer.dockerplatform.utils.enums.ERROR_MSG;
+import cn.marioquer.dockerplatform.utils.enums.ErrorMessage;
 import cn.marioquer.dockerplatform.vo.UserLoginVO;
 import cn.marioquer.dockerplatform.dao.UserDao;
 import cn.marioquer.dockerplatform.entity.UserEntity;
@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userDao.findByUsername(username);
         UserLoginVO userLoginVO = new UserLoginVO();
         if (user == null) {
-            userLoginVO.setLogin_status(ERROR_MSG.LOGIN_NOT_FOUND);
+            userLoginVO.setLogin_status(ErrorMessage.NOT_FOUND);
         } else {
             String salt = user.getSalt();
             String encryptedPassword = user.getPassword();
@@ -38,9 +38,9 @@ public class UserServiceImpl implements UserService {
             if (result) {
                 userLoginVO.setId(user.getId());
                 userLoginVO.setUsername(user.getUsername());
-                userLoginVO.setLogin_status(ERROR_MSG.SUCCESS);
+                userLoginVO.setLogin_status(ErrorMessage.SUCCESS);
             } else {
-                userLoginVO.setLogin_status(ERROR_MSG.LOGIN_ERROR);
+                userLoginVO.setLogin_status(ErrorMessage.WRG_PSW);
             }
         }
         return userLoginVO;
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String signUp(String username, String password) {
         if (userDao.existsByUsername(username)) {
-            return ERROR_MSG.SIGNUP_EXISTS;
+            return ErrorMessage.EXISTS;
         } else {
             UserEntity user = new UserEntity();
             user.setUsername(username);
@@ -59,13 +59,13 @@ public class UserServiceImpl implements UserService {
                 user.setSalt(salt);
                 user.setPassword(encryptedPassword);
                 userDao.saveAndFlush(user);
-                return ERROR_MSG.SUCCESS;
+                return ErrorMessage.SUCCESS;
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             } catch (InvalidKeySpecException e) {
                 e.printStackTrace();
             }
         }
-        return ERROR_MSG.FAIL;
+        return ErrorMessage.FAIL;
     }
 }

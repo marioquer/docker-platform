@@ -9,8 +9,8 @@
 <body>
 <header>
     <div class="brand">Deck.<span class="brand-hightlight">io</span></div>
-    <a class="index-left" href="/page/dashboard">控制台</a>
-    <a class="index-left active" href="/page/serverList">节点管理</a>
+    <a class="index-left" href="/page/index/dashboard">控制台</a>
+    <a class="index-left active" href="/page/server/serverList">节点管理</a>
     <a class="index-left" href="/page/swarm/overview">集群管理</a>
     <a class="index-right" onclick="logout()">登出</a>
     <a class="index-right" th:text="${session.User.getUsername()}">marioquer</a>
@@ -24,26 +24,26 @@
     <div class="header-action" onclick="switchModal(1,'new_server_modal')">增加节点 +</div>
     <table class="list-table">
         <thead class="list-row">
-        <th class="column-1">节点名</th>
-        <th class="column-2">角色</th>
-        <th class="column-3">CPU</th>
-        <th class="column-4">内存</th>
-        <th class="column-5">docker版本</th>
-        <th class="column-6">IP</th>
-        <th class="column-7">状态</th>
-        <th class="column-op">操作</th>
+        <th class="name">节点名</th>
+        <th class="os">OS</th>
+        <th class="cpu">CPU</th>
+        <th class="memory">内存</th>
+        <th class="docker-version">docker版本</th>
+        <th class="ip">IP</th>
+        <th class="status">状态</th>
+        <!--<th class="op">操作</th>-->
         </thead>
         <tbody id="table_body">
         <tr th:each="server:${serverList}">
             <td class="column-0 display-none" th:text="${server.getId()}">0</td>
-            <td class="column-1" th:text="${server.getName()}">-</td>
-            <td class="column-2" th:text="${server.getSwarmRole()==null?'-':server.getSwarmRole()}">-</td>
-            <td class="column-3" th:text="${server.getCpu()}">-</td>
-            <td class="column-4" th:text="${server.getMemory()}">-</td>
-            <td class="column-5" th:text="${server.getDockerVersion()}">-</td>
-            <td class="column-6" th:text="${server.getIp()}">-</td>
-            <td class="column-7"><span class="green-spot"></span>运行中</td>
-            <td class="column-op">操作</td>
+            <td class="name" th:text="${server.getName()}">-</td>
+            <td class="os" th:text="${server.getPlatform()}">-</td>
+            <td class="cpu" th:text="${server.getCpu()}">-</td>
+            <td class="memory" th:text="${server.getMemory()}">-</td>
+            <td class="docker-version" th:text="${server.getDockerVersion()}">-</td>
+            <td class="ip" th:text="${server.getIp()}">-</td>
+            <td class="status"><span class="green-spot"></span>运行中</td>
+            <!--<td class="column-op">操作</td>-->
         </tr>
         </tbody>
     </table>

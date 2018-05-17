@@ -20,9 +20,6 @@ public class ServerController {
 
     @PostMapping("/addServer")
     public String addServer(int ownerId, String name, String ip, String uname, String password) {
-        if (serverService.installServer(ownerId, name, ip, uname, password))
-            return "success";
-        else
-            return "fail";
+        return serverService.installServer(ownerId, name, ip, uname, password);
     }
 }

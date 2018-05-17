@@ -39,7 +39,7 @@ public class SSHHelper {
             session.setPassword(sshInfo.getPwd());
             session.connect(SESSION_TIMEOUT);
         } catch (JSchException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             return -1;
         }
         System.out.println((System.currentTimeMillis() - start) + "ms");
