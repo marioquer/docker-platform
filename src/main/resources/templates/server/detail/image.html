@@ -1,10 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="/css/nprogress.css"/>
+    <title>Deck.io - 节点管理/镜像管理</title>
 </head>
 <body>
+<header>
+    <div class="brand">Deck.<span class="brand-hightlight">io</span></div>
+    <a class="index-left" href="/page/index/dashboard">控制台</a>
+    <a class="index-left active" href="/page/server/serverList">节点管理</a>
+    <a class="index-left" href="/page/swarm/overview">集群管理</a>
+    <a class="index-right" onclick="logout()">登出</a>
+    <a class="index-right" th:text="${session.User.getUsername()}">marioquer</a>
+    <a class="index-right display-none" id="owner_id" th:text="${session.User.getId()}">1</a>
+</header>
 
+<div class="two-column-container">
+    <ul class="left-action">
+        <li class="display-none" id="server_id" th:text="${serverId}"></li>
+        <li class="action-item" onclick="jumpToContainer()">容器管理</li>
+        <li class="action-item active" onclick="jumpToImage()">镜像管理</li>
+    </ul>
+    <div class="right-form-container" id="image_container">
+        <div class="list-header">
+            镜像列表
+        </div>
+        <!--<div class="header-action" onclick="switchModal(1,'new_server_modal')">增加容器 +</div>-->
+        <table class="list-table">
+            <thead class="list-row">
+            <th class="repository">仓库名</th>
+            <th class="tag">版本标签</th>
+            <th class="created">创建于</th>
+            <th class="image-id">镜像ID</th>
+            <th class="size">大小</th>
+            <!--<th class="op">操作</th>-->
+            </thead>
+            <tbody id="table_body">
+            <tr th:each="image:${imageList}">
+                <td class="repository" th:text="${image.getRepository()}">-</td>
+                <td class="tag" th:text="${image.getTag()}">-</td>
+                <td class="created" th:text="${image.getCreated()}">-</td>
+                <td class="image-id" th:text="${image.getId()}">-</td>
+                <td class="size" th:text="${image.getSize()}">-</td>
+                <!--&lt;!&ndash;<td class="column-op">操作</td>&ndash;&gt;-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal" id="new_container_modal">
+    <div class="form-container modal-style">
+        <span class="close-button" onclick="switchModal(0,'new_server_modal')">X</span>
+        <div class="form-header">
+            添加节点
+        </div>
+        <input type="text" class="form-style" id="new_name" placeholder="主机别名：server-01"/>
+        <input type="text" class="form-style" id="new_ip" placeholder="IP地址：0.0.0.0"/>
+        <input type="text" class="form-style" id="new_uname" placeholder="账号：root"/>
+        <input type="password" class="form-style" id="new_password" placeholder="密码"/>
+        <div class="modal-operations">
+            <button class="verify-button modal-button" onclick="addServer()">SUBMIT</button>
+            <button class="action-button modal-button" onclick="switchModal(0,'new_server_modal')">CANCEL</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/nprogress.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script>
+    NProgress.done();
+</script>
 </body>
 </html>

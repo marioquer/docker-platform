@@ -2,6 +2,7 @@ package cn.marioquer.dockerplatform.service.serviceImpl;
 
 import cn.marioquer.dockerplatform.utils.enums.ErrorMessage;
 import cn.marioquer.dockerplatform.utils.enums.ShellScript;
+import cn.marioquer.dockerplatform.utils.enums.UtilString;
 import cn.marioquer.dockerplatform.vo.ServerVO;
 import cn.marioquer.dockerplatform.dao.ServerDao;
 import cn.marioquer.dockerplatform.entity.ServerEntity;
@@ -13,11 +14,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ServerServiceImpl implements ServerService {
 
-    private static String RETURN_REG_PATTERN = "\\n|\\r\\n|\\r";
 
     @Autowired
     ServerDao serverDao;
@@ -52,16 +53,19 @@ public class ServerServiceImpl implements ServerService {
         }
         SSHHelper sshHelper = new SSHHelper(new SSHInfo(ip, uname, password));
         //密钥错误
-        if (sshHelper.connect() == -1) {
+        int connectStatus = sshHelper.connect();
+        if (connectStatus == -1) {
             return ErrorMessage.WRG_PSW;
+        } else if (connectStatus == -2) {
+            return ErrorMessage.WRG_SECURITY_SETTING;
         }
-        String[] dockerInfo = sshHelper.exec(ShellScript.DOCKER_INFO).split(RETURN_REG_PATTERN);
+        String[] dockerInfo = sshHelper.exec(ShellScript.DOCKER_INFO).split(UtilString.REG_PATTERN_RETURN);
         if (existsDocker(dockerInfo)) {
             saveServerEntity(dockerInfo, ownerId, name, ip, uname, password);
             result = ErrorMessage.SUCCESS;
         } else {
             sshHelper.execFromFile("shellfile/initialize_server.sh");
-            if (existsDocker(sshHelper.exec(ShellScript.DOCKER_INFO).split(RETURN_REG_PATTERN))) {
+            if (existsDocker(sshHelper.exec(ShellScript.DOCKER_INFO).split(UtilString.REG_PATTERN_RETURN))) {
                 saveServerEntity(dockerInfo, ownerId, name, ip, uname, password);
                 result = ErrorMessage.SUCCESS;
             }
@@ -93,5 +97,10 @@ public class ServerServiceImpl implements ServerService {
         }
         ServerEntity serverEntity = new ServerEntity(ownerId, name, ip, platform, docker_version, cpu, memory, uname, password);
         serverDao.saveAndFlush(serverEntity);
+    }
+
+    @Override
+    public Optional<ServerEntity> getServerEntity(int serverId) {
+        return serverDao.findById(serverId);
     }
 }

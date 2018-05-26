@@ -1,10 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="/css/common.css"/>
+    <link rel="stylesheet" href="/css/nprogress.css"/>
+    <title>Deck.io - 集群管理/服务管理</title>
 </head>
 <body>
+<header>
+    <div class="brand">Deck.<span class="brand-hightlight">io</span></div>
+    <a class="index-left" href="/page/index/dashboard">控制台</a>
+    <a class="index-left" href="/page/server/serverList">节点管理</a>
+    <a class="index-left active" href="/page/swarm/overview">集群管理</a>
+    <a class="index-right" onclick="logout()">登出</a>
+    <a class="index-right" th:text="${session.User.getUsername()}">marioquer</a>
+    <a class="index-right display-none" id="owner_id" th:text="${session.User.getId()}">1</a>
+</header>
 
+<div class="two-column-container">
+    <ul class="left-action">
+        <li class="action-item" onclick="location.href='/page/swarm/overview';">集群主机</li>
+        <li class="action-item active" onclick="location.href='/page/swarm/service';">服务管理</li>
+    </ul>
+    <div class="right-form-container" id="container_container">
+        <div class="list-header">
+            服务管理
+        </div>
+        <div class="header-action" onclick="switchModal(1,'new_container_modal')">部署服务 +</div>
+        <table class="list-table">
+            <thead class="list-row">
+            <th class="name">服务名</th>
+            <th class="image">镜像</th>
+            <th class="created">创建于</th>
+            <th class="status">运行状态</th>
+            <th class="ports">端口</th>
+            <!--<th class="op">操作</th>-->
+            </thead>
+            <tbody id="table_body">
+            <!--<tr th:each="server:${serverList}">-->
+            <!--<td class="server-name"><a th:href="@{/page/server/container(serverId=${server.getId()})}" th:text="${server.getName()}">-</a></td>-->
+            <!--<td class="role" th:text="${server.getSwarmRole()}">-</td>-->
+            <!--<td class="os" th:text="${server.getPlatform()}">-</td>-->
+            <!--<td class="cpu" th:text="${server.getCpu()}">-</td>-->
+            <!--<td class="memory" th:text="${server.getMemory()}">-</td>-->
+            <!--<td class="docker-version" th:text="${server.getDockerVersion()}">-</td>-->
+            <!--<td class="ip" th:text="${server.getIp()}">-</td>-->
+            <!--<td class="status"><span class="green-spot"></span>运行中</td>-->
+            <!--&lt;!&ndash;<td class="column-op">操作</td>&ndash;&gt;-->
+            <!--</tr>-->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal" id="new_container_modal">
+    <div class="form-container modal-style">
+        <span class="close-button" onclick="switchModal(0,'new_container_modal')">X</span>
+        <div class="form-header">
+            添加容器
+        </div>
+        <input type="text" class="form-style" id="new_rep" placeholder="仓库名：mysql"/>
+        <input type="text" class="form-style" id="new_tag" placeholder="版本标签：latest (默认latest,选填)"/>
+        <!--<input type="text" class="form-style" id="new_url" placeholder="Dockfile路径：/usr/..."/>-->
+        <input type="text" class="form-style" id="new_port" placeholder="映射端口：3000:80 (host:container,选填)"/>
+        <div class="modal-operations">
+            <button class="verify-button modal-button" onclick="addContainer()">SUBMIT</button>
+            <button class="action-button modal-button" onclick="switchModal(0,'new_container_modal')">CANCEL</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/nprogress.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script>
+    NProgress.done();
+</script>
 </body>
 </html>

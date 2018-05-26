@@ -35,8 +35,8 @@
         </thead>
         <tbody id="table_body">
         <tr th:each="server:${serverList}">
-            <td class="column-0 display-none" th:text="${server.getId()}">0</td>
-            <td class="name" th:text="${server.getName()}">-</td>
+            <!--<td class="column-0 display-none" th:text="${server.getId()}">0</td>-->
+            <td class="server-name"><a th:href="@{/page/server/container(serverId=${server.getId()})}" th:text="${server.getName()}">-</a></td>
             <td class="os" th:text="${server.getPlatform()}">-</td>
             <td class="cpu" th:text="${server.getCpu()}">-</td>
             <td class="memory" th:text="${server.getMemory()}">-</td>

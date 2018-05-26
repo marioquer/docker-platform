@@ -6,6 +6,12 @@ public class SSHInfo {
     private String pwd;
     private int port;
 
+    /**
+     *
+     * @param host
+     * @param user
+     * @param pwd
+     */
     public SSHInfo(String host, String user, String pwd) {
         this.host = host;
         this.user = user;
@@ -13,6 +19,13 @@ public class SSHInfo {
         this.port = 22; //default
     }
 
+    /**
+     *
+     * @param host
+     * @param user
+     * @param pwd
+     * @param port
+     */
     public SSHInfo(String host, String user, String pwd, int port) {
         this.host = host;
         this.user = user;

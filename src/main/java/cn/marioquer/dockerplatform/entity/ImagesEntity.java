@@ -13,7 +13,7 @@ public class ImagesEntity {
     private String repository;
     private String tag;
     private String size;
-    private Timestamp created;
+    private String created;
 
     @Id
     @Column(name = "id", nullable = false, length = 255)
@@ -77,11 +77,11 @@ public class ImagesEntity {
 
     @Basic
     @Column(name = "created", nullable = false)
-    public Timestamp getCreated() {
+    public String getCreated() {
         return created;
     }
 
-    public void setCreated(Timestamp created) {
+    public void setCreated(String created) {
         this.created = created;
     }
 

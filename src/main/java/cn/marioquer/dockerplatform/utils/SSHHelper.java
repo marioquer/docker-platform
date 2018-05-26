@@ -40,7 +40,10 @@ public class SSHHelper {
             session.connect(SESSION_TIMEOUT);
         } catch (JSchException e) {
             System.out.println(e.getMessage());
-            return -1;
+            if (e.getMessage().startsWith("java.net.UnknownHostException"))
+                return -2; // wrong setting
+            else
+                return -1; // wrong psw
         }
         System.out.println((System.currentTimeMillis() - start) + "ms");
         return 0;

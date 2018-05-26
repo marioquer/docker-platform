@@ -4,7 +4,7 @@
     <meta charset="UTF-8"/>
     <link rel="stylesheet" href="/css/common.css"/>
     <link rel="stylesheet" href="/css/nprogress.css"/>
-    <title>Deck.io - 集群</title>
+    <title>Deck.io - 集群管理</title>
 </head>
 <body>
 <header>
@@ -17,18 +17,76 @@
     <a class="index-right display-none" id="owner_id" th:text="${session.User.getId()}">1</a>
 </header>
 
-<div class=" form-container" id="server_container">
-
+<div class="two-column-container">
+    <ul class="left-action">
+        <li class="action-item active" onclick="location.href='/page/swarm/overview';">集群主机</li>
+        <li class="action-item" onclick="location.href='/page/swarm/service';">服务管理</li>
+    </ul>
+    <div class="right-form-container" id="container_container">
+        <div class="list-header">
+            集群主机
+        </div>
+        <div class="header-action" onclick="switchModal(1,'new_server_modal')">增加主机 +</div>
+        <table class="list-table">
+            <thead class="list-row">
+            <th class="name">节点名</th>
+            <th class="role">角色</th>
+            <th class="os">OS</th>
+            <th class="cpu">CPU</th>
+            <th class="memory">内存</th>
+            <th class="docker-version">docker版本</th>
+            <th class="ip">IP</th>
+            <th class="status">状态</th>
+            <!--<th class="op">操作</th>-->
+            </thead>
+            <tbody id="table_body">
+            <tr th:each="server:${swarmServerList}">
+                <td class="server-name"><a th:href="@{/page/server/container(serverId=${server.getId()})}"
+                                           th:text="${server.getName()}">-</a></td>
+                <td class="role" th:text="${server.getSwarmRole()}">-</td>
+                <td class="os" th:text="${server.getPlatform()}">-</td>
+                <td class="cpu" th:text="${server.getCpu()}">-</td>
+                <td class="memory" th:text="${server.getMemory()}">-</td>
+                <td class="docker-version" th:text="${server.getDockerVersion()}">-</td>
+                <td class="ip" th:text="${server.getIp()}">-</td>
+                <td class="status"><span class="green-spot"></span>运行中</td>
+                <!--<td class="column-op">操作</td>-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<div th:replace="fragments::msg_modal"></div>
-<!--<div th:replace="fragments::toast"></div>-->
+<div class="modal" id="new_server_modal">
+    <div class="form-container modal-style">
+        <span class="close-button" onclick="switchModal(0,'new_server_modal')">X</span>
+        <div class="form-header">
+            添加主机
+        </div>
+        <!--偷懒了-->
+        <input type="text" class="form-style" id="new_server" placeholder="主机名：server-01"/>
+
+        <div class="choice">
+            <input type="radio" id="manager" value="manager" name="single-choice"/>
+            <label for="manager" class="check-box single"></label>
+            <label for="manager" class="choice-text">Manager</label>
+            <input type="radio" id="worker" value="worker" name="single-choice"/>
+            <label for="worker" class="check-box single"></label>
+            <label for="worker" class="choice-text">Worker</label>
+        </div>
+        <div class="modal-operations">
+            <button class="verify-button modal-button" onclick="addSwarmServer()">SUBMIT</button>
+            <button class="action-button modal-button" onclick="switchModal(0,'new_server_modal')">CANCEL</button>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript" src="/js/jquery.min.js"></script>
 <script type="text/javascript" src="/js/nprogress.js"></script>
 <script type="text/javascript" src="/js/common.js"></script>
 <script>
     NProgress.done();
+
 </script>
 </body>
 </html>

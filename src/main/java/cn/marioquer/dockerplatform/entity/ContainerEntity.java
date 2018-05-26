@@ -13,7 +13,7 @@ public class ContainerEntity {
     private String image;
     private String status;
     private String ports;
-    private Timestamp created;
+    private String created;
     private short isTask;
 
     @Id
@@ -78,11 +78,11 @@ public class ContainerEntity {
 
     @Basic
     @Column(name = "created", nullable = false)
-    public Timestamp getCreated() {
+    public String getCreated() {
         return created;
     }
 
-    public void setCreated(Timestamp created) {
+    public void setCreated(String created) {
         this.created = created;
     }
 

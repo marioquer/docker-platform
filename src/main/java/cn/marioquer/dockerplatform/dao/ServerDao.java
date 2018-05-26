@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface ServerDao extends JpaRepository<ServerEntity, Integer> {
     public List<ServerEntity> findByOwnerId(int ownerId);
-
     public ServerEntity findByIp(String ip);
+    public ServerEntity findByName(String name);
 }
