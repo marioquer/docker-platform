@@ -17,6 +17,15 @@ public class ContainerController {
     @Autowired
     ServerService serverService;
 
+    /**
+     * @param serverId 数据库中的serverId
+     * @return ContainerVO的List，前端获取成JSON
+     */
+    @PostMapping("getContainerList")
+    public List<ContainerVO> getContainerList(int serverId) {
+        return containerService.getContainerList(serverId);
+    }
+
     @PostMapping("/deployContainer")
     public String deployContainer(String rep, String tag, String port, int ownerId, int serverId) {
         ServerEntity server = serverService.getServerEntity(serverId).get();
@@ -27,13 +36,15 @@ public class ContainerController {
         }
     }
 
-    /**
-     *
-     * @param serverId 数据库中的serverId
-     * @return ContainerVO的List，前端获取成JSON
-     */
-    @PostMapping("getContainerList")
-    public List<ContainerVO> getContainerList(int serverId){
-        return containerService.getContainerList(serverId);
+    @PostMapping("/deployContainerByDockerfile")
+    public String deployContainerByDockerfile(String dockerfileUrl, int serverId) {
+        return containerService.deployContainerByDockerfile(dockerfileUrl, serverId);
     }
+
+    @PostMapping("/deployContainerByCompose")
+    public String deployContainerByCompose(String composeFileUrl, int serverId) {
+        return containerService.deployContainerByCompose(composeFileUrl, serverId);
+    }
+
+
 }
